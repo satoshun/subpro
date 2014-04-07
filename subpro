@@ -3,6 +3,10 @@
 ProjectDir=~/.subpro/
 SettingBase=${ProjectDir}base/
 
+if [ ! -d "$ProjectDir" ]; then
+    mkdir -p "$ProjectDir"
+fi
+
 _open_sublime_project()
 {
     if [ -n "$1" ]; then

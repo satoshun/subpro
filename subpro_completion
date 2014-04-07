@@ -1,0 +1,28 @@
+#!/bin/sh
+
+
+all_sublime_project_files()
+{
+    find ~/.subpro/ -name '*.sublime-project' | while read name
+    do
+        if [[ "$name" =~ .sublime-project$ ]]; then
+            echo $name | awk '{n=split($0,a,"/"); print a[n]}' | sed -e "s/.sublime-project//"
+        fi
+    done
+}
+
+
+_subpro()
+{
+    COMPREPLY=()
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+    if [ $COMP_CWORD -lt 3 ]; then
+        COMPREPLY=($(compgen -W "`all_sublime_project_files`" -- ${cur}))
+    else
+        COMPREPLY=($(compgen -f ${cur}))
+    fi
+}
+
+
+complete -F _subpro subpro
