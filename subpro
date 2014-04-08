@@ -73,7 +73,16 @@ create_sublime_project()
 }
 
 
+show_usage()
+{
+    echo "Example usage:"
+    echo "  subpro [project]"
+    echo "  subpro create [package] [project dir]"
+    echo "  subpro delete [project]"
+}
+
 case $# in
+    0) show_usage ;;
     1) open_sublime_project $1 ;;
     2) case "$1" in
             d | del | delete)
