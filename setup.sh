@@ -7,3 +7,6 @@ chmod 755 ${root}/subpro
 
 cp ./subpro_completion ${root}/__subpro_completion
 chmod 755 ${root}/__subpro_completion
+
+mkdir -p ~/.subpro
+cp -r base ~/.subpro/
