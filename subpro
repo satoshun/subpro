@@ -4,7 +4,7 @@ ProjectDir=~/.subpro/
 SettingBase=${ProjectDir}base/
 
 if [ ! -d "$ProjectDir" ]; then
-    mkdir -p "$ProjectDir"
+    mkdir -p "${ProjectDir}/base"
 fi
 
 _open_sublime_project()
@@ -31,16 +31,16 @@ open_sublime_project()
 
 delete_sublime_project()
 {
-    for prefix in sublime-project sublime-workspace
+    for suffix in sublime-project sublime-workspace
     do
-        find "$ProjectDir" -name "*${prefix}" | while read name
+        txt=${1}.${suffix}
+        find "$ProjectDir" -name "*${suffix}" | while read name
         do
-            txt=${1}.${prefix}
             m=`echo $name | grep /$txt`
 
             if [ -n "$m" ]; then
-                rm -r "$name"
-                return 0
+                rm "$name"
+                echo "delete $name"
             fi
         done
     done
@@ -77,8 +77,8 @@ show_usage()
 {
     echo "Example usage:"
     echo "  subpro [project]"
-    echo "  subpro create [package] [project dir]"
-    echo "  subpro delete [project]"
+    echo "  subpro create|c [package] [project dir]"
+    echo "  subpro delete|del|d [project]"
 }
 
 case $# in

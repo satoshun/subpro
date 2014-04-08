@@ -4,4 +4,10 @@ this is management project of Sublime Text.
 
 ## usage
 
-### create project
+```shell
+$ subpro
+Example usage:
+  subpro [project]
+  subpro create|c [package] [project dir]
+  subpro delete|del|d [project]
+```
