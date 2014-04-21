@@ -46,15 +46,16 @@ create_sublime_project()
 {
     folder=$1
 
-    if [ -n "$3" ]; then
-        project=$3
+    project=$3
+    if [ -n "$4" ]; then
+        dest_project=$4
     else
-        project=$2
+        dest_project=$3
     fi
 
     target="\"path\": \"`pwd`/${2}\","
     escape=`echo $target | sed "s/\//\\\\\\\\\//g"`
-    dest="${ProjectDir}${folder}/${project}.sublime-project"
+    dest="${ProjectDir}${folder}/${dest_project}.sublime-project"
 
     mkdir -p "${ProjectDir}${folder}"
 
@@ -73,7 +74,7 @@ show_usage()
 {
     echo "Example usage:"
     echo "  subpro [project]"
-    echo "  subpro create|c [package] [project dir]"
+    echo "  subpro create|c [package] [project path] [name]"
     echo "  subpro delete|del|d [project]"
 }
 
@@ -87,7 +88,7 @@ case $# in
        ;;
     *) case "$1" in
            c | create)
-                create_sublime_project $2 $3 $4;;
+                create_sublime_project $2 $3 $4 $5;;
        esac
        ;;
 esac
