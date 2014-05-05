@@ -2,7 +2,25 @@
 
 it's management project of Sublime Text with terminal.
 
-## usage
+### install
+
+use homebrew for macOS
+
+```shell
+$ brew tap satoshun/commands
+$ brew install subpro
+$ brew install subpro-completion
+```
+
+add under code to .bashrc
+
+```shell
+if [ -f `brew --prefix`/etc/bash_completion.d/subpro_completion ]; then
+    source `brew --prefix`/etc/bash_completion.d/subpro_completion
+fi
+```
+
+### usage
 
 ```shell
 $ subpro
@@ -12,7 +30,7 @@ Example usage:
   subpro delete|del|d [project]
 ```
 
-## Example
+### Example
 
 ```shell
 $ subpro
