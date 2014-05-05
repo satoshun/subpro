@@ -1,13 +1,11 @@
 #!/bin/bash
 
-PROJECT_DIR=~/.subpro/
-BASE_CONFIG_DIR=${PROJECT_DIR}base/
-SUBLIME_CMD="Sublime Text"
+. __subpro_variables
 
 _open_sublime_project()
 {
     if [ -n "$1" ]; then
-        open -a $SUBLIME_CMD "$1"
+        open -a "$SUBLIME_CMD" "$1"
         return 0
     fi
 
@@ -16,7 +14,7 @@ _open_sublime_project()
 
 open_sublime_project()
 {
-    find "$PROJECT_DIR" -name "$1.sublime-project" | while read name
+    find "$PROJECT_DIR" -name "$1.${PROJECT_SUFFIX}" | while read name
     do
         _open_sublime_project "$name"
 
@@ -28,7 +26,7 @@ open_sublime_project()
 
 delete_sublime_project()
 {
-    for suffix in sublime-project sublime-workspace
+    for suffix in "${PROJECT_SUFFIX}" sublime-workspace
     do
         txt=${1}.${suffix}
         find "$PROJECT_DIR" -name "*${suffix}" | while read name
@@ -46,26 +44,27 @@ delete_sublime_project()
 create_sublime_project()
 {
     group=$1
-    if [ -n "$4" ]; then
-        dest_project=$4
-    else
+    if [ -n "$3" ]; then
         dest_project=$3
+    else
+        dest_project=$2
+    fi
+
+    dest="${PROJECT_DIR}${group}/${dest_project}.${PROJECT_SUFFIX}"
+
+    mkdir -p "${PROJECT_DIR}${group}"
+
+    if [ -a "${BASE_CONFIG_DIR}${group}.${PROJECT_SUFFIX}" ]; then
+        cp "${BASE_CONFIG_DIR}${group}.${PROJECT_SUFFIX}" "$dest"
+    else
+        cp "${BASE_CONFIG_DIR}base.${PROJECT_SUFFIX}" "$dest"
     fi
 
     target="\"path\": \"`pwd`/${2}\","
     escape=`echo $target | sed "s/\//\\\\\\\\\//g"`
-    dest="${PROJECT_DIR}${group}/${dest_project}.sublime-project"
-
-    mkdir -p "${PROJECT_DIR}${group}"
-
-    if [ -a "${BASE_CONFIG_DIR}${group}.sublime-project" ]; then
-        cp "${BASE_CONFIG_DIR}${group}.sublime-project" "$dest"
-    else
-        cp "${BASE_CONFIG_DIR}base.sublime-project" "$dest"
-    fi
-
     sed -i '' -e "s/\"path\":.*/${escape}/" "$dest"
-    open -a $SUBLIME_CMD "$dest"
+
+    open -a "$SUBLIME_CMD" "$dest"
 }
 
 

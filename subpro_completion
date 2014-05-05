@@ -1,12 +1,14 @@
-#!/bin/sh
+#!/bin/bash
+
+. __subpro_variables
 
 
 all_sublime_project_files()
 {
-    find ~/.subpro/ -name '*.sublime-project' | while read name
+    find ${PROJECT_DIR} -name "*.${PROJECT_SUFFIX}" | while read name
     do
-        if [[ "$name" =~ .sublime-project$ ]]; then
-            echo $name | awk '{n=split($0,a,"/"); print a[n]}' | sed -e "s/.sublime-project//"
+        if [[ "$name" =~ ."${PROJECT_SUFFIX}"$ ]]; then
+            echo $name | awk '{n=split($0,a,"/"); print a[n]}' | sed -e "s/.${PROJECT_SUFFIX}//"
         fi
     done
 }
