@@ -35,7 +35,7 @@ Example usage:
 project list && open project
 
 ```shell
-$ subpro
+$ subpro [tab]
 Display all 131 possibilities? (y or n)
 Amalgam                                 beaker                                  ghost                                   roboguice
 Android-Universal-Image-Loader          bitcoin                                 gist_css                                routes
@@ -48,6 +48,7 @@ create project
 
 ```shell
 $ ls
+martini
 $ subpro create golang martini
 
 # create martini project into golang directory.
@@ -62,3 +63,7 @@ delete project
 ```shell
 $ subpro delete martini
 ```
+
+### License
+
+MIT(http://opensource.org/licenses/mit-license.php)

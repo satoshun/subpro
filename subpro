@@ -90,7 +90,7 @@ case $# in
        ;;
     *) case "$1" in
            c | create)
-                create_sublime_project $2 $3 $4 $5;;
+                create_sublime_project $2 $3 $4 $5 ;;
        esac
        ;;
 esac
