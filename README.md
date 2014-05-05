@@ -32,6 +32,8 @@ Example usage:
 
 ### Example
 
+project list && open project
+
 ```shell
 $ subpro
 Display all 131 possibilities? (y or n)
@@ -39,5 +41,24 @@ Amalgam                                 beaker                                  
 Android-Universal-Image-Loader          bitcoin                                 gist_css                                routes
 ...
 $ subpro ghost
-[open ghost project with sublime text]
+# open ghost project with sublime text]
+```
+
+create project
+
+```shell
+$ ls
+$ subpro create golang martini
+
+# create martini project into golang directory.
+
+...
+$ subpro martini
+# open martini project with sublime text
+```
+
+delete project
+
+```shell
+$ subpro delete martini
 ```
