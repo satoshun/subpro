@@ -1,0 +1,22 @@
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": "",
+            "file_exclude_patterns": [
+                "*.meta", "*.mat", "*.prefab",
+                "*.exr", "*.min.css", "*.min.js",
+                ".Python", "*.jar"],
+            "folder_exclude_patterns": [
+                "build", "dist", "node_modules", "bower_components",
+                ".tmp", ".gradle", ".sass-cache", "__pycache__", "vendor",
+                ".idea"
+            ]
+        }
+    ],
+    "settings": {
+        "python_interpreter_path": "/usr/bin/python",
+        "python_interpreter": "/usr/bin/python"
+    }
+}
