@@ -1,6 +1,9 @@
 #!/bin/bash
 
-. __subpro_variables
+PROJECT_DIR=~/.subpro/
+BASE_CONFIG_DIR=${PROJECT_DIR}base/
+SUBLIME_CMD="Sublime Text"
+PROJECT_SUFFIX=sublime-project
 
 
 all_sublime_project_files()
