@@ -18,12 +18,12 @@ _open_sublime_project()
 
 open_sublime_project()
 {
-    find "$PROJECT_DIR" -name "$1.${PROJECT_SUFFIX}" | while read name
+    find "$PROJECT_DIR" -name "$1.${PROJECT_SUFFIX}" | while read path
     do
-        _open_sublime_project "$name"
+        _open_sublime_project "$path"
 
         if [ $? -eq 0 ]; then
-            exit 0
+            return 0
         fi
     done
 }
@@ -32,14 +32,12 @@ delete_sublime_project()
 {
     for suffix in "${PROJECT_SUFFIX}" sublime-workspace
     do
-        txt=${1}.${suffix}
-        find "$PROJECT_DIR" -name "*${suffix}" | while read name
+        filename=${1}.${suffix}
+        find "$PROJECT_DIR" -name "*${suffix}" | while read path
         do
-            m=`echo $name | grep /$txt`
-
-            if [ -n "$m" ]; then
-                rm "$name"
-                echo "delete $name"
+            if [[ $path =~ /"$filename"$  ]]; then
+                echo "delete $path"
+                rm "$path"
             fi
         done
     done
@@ -68,9 +66,8 @@ create_sublime_project()
     escape=`echo $target | sed "s/\//\\\\\\\\\//g"`
     sed -i '' -e "s/\"path\":.*/${escape}/" "$dest"
 
-    open -a "$SUBLIME_CMD" "$dest"
+    _open_sublime_project "$dest"
 }
-
 
 show_usage()
 {
@@ -79,6 +76,7 @@ show_usage()
     echo "  subpro create|c [package] [project path] [name]"
     echo "  subpro delete|del|d [project]"
 }
+
 
 case $# in
     0) show_usage ;;
