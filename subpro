@@ -2,8 +2,12 @@
 
 PROJECT_DIR=~/.subpro/
 BASE_CONFIG_DIR=${PROJECT_DIR}base/
-SUBLIME_CMD="Sublime Text"
 PROJECT_SUFFIX=sublime-project
+if [ -d "/Applications/Sublime Text.app" -o -d "$HOME/Applications/Sublime Text.app" ]; then
+    SUBLIME_CMD="Sublime Text"
+else
+    SUBLIME_CMD="Sublime Text 2"
+fi
 
 
 _open_sublime_project()
