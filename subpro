@@ -9,7 +9,7 @@ PROJECT_SUFFIX=sublime-project
 _open_sublime_project()
 {
     if [ -n "$1" ]; then
-        open -a "$SUBLIME_CMD" "$1"
+        open -a "${SUBLIME_CMD}" "$1"
         return 0
     fi
 
@@ -18,7 +18,7 @@ _open_sublime_project()
 
 open_sublime_project()
 {
-    find "$PROJECT_DIR" -name "$1.${PROJECT_SUFFIX}" | while read path
+    find "${PROJECT_DIR}" -name "$1.${PROJECT_SUFFIX}" | while read path
     do
         _open_sublime_project "$path"
 
@@ -33,11 +33,12 @@ delete_sublime_project()
     for suffix in "${PROJECT_SUFFIX}" sublime-workspace
     do
         filename=${1}.${suffix}
-        find "$PROJECT_DIR" -name "*${suffix}" | while read path
+        find "${PROJECT_DIR}" -name "*.${suffix}" | while read path
         do
-            if [[ $path =~ /"$filename"$  ]]; then
-                echo "delete $path"
-                rm "$path"
+            if [[ $path =~ /"${filename}"$  ]]; then
+                echo "delete ${path}"
+                rm "${path}"
+                break
             fi
         done
     done
