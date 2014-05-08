@@ -3,7 +3,8 @@
 PROJECT_DIR=~/.subpro/
 BASE_CONFIG_DIR=${PROJECT_DIR}base
 PROJECT_SUFFIX=sublime-project
-if [ -d "/Applications/Sublime Text.app" -o -d "$HOME/Applications/Sublime Text.app" ]; then
+APPLICATION_DIR="Applications"
+if [ -d "/${APPLICATION_DIR}/Sublime Text.app" -o -d "${HOME}/${APPLICATION_DIR}/Sublime Text.app" ]; then
     SUBLIME_CMD="Sublime Text"
 else
     SUBLIME_CMD="Sublime Text 2"
@@ -34,14 +35,11 @@ delete_sublime_project()
 create_sublime_project()
 {
     group=$1
-    if [ -n "$3" ]; then
-        dest_project=$3
-    else
-        dest_project=$2
-    fi
+    dest_project=$3 && [ -z "$dest_project" ] && dest_project=$2
 
     destPath="${PROJECT_DIR}${group}/${dest_project}.${PROJECT_SUFFIX}"
 
+    # copy project config file
     mkdir -p "${PROJECT_DIR}${group}"
     if [ -f "${BASE_CONFIG_DIR}/${group}.${PROJECT_SUFFIX}" ]; then
         cp "${BASE_CONFIG_DIR}/${group}.${PROJECT_SUFFIX}" "${destPath}"
