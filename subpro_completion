@@ -1,14 +1,12 @@
 #!/bin/bash
 
 PROJECT_DIR=~/.subpro/
-BASE_CONFIG_DIR=${PROJECT_DIR}base/
-SUBLIME_CMD="Sublime Text"
 PROJECT_SUFFIX=sublime-project
 
 
 all_sublime_project_files()
 {
-    find "${PROJECT_DIR}" -type f -name "*.${PROJECT_SUFFIX}" -exec basename "{}" ".${PROJECT_SUFFIX}" \;
+    find "${PROJECT_DIR}" -type f -name "*.${PROJECT_SUFFIX}" | xargs -I{} basename "{}" ".${PROJECT_SUFFIX}"
 }
 
 
