@@ -18,12 +18,14 @@ open_sublime_project()
 
 delete_sublime_project()
 {
+    local filename suffix path
+
     for suffix in "${PROJECT_SUFFIX}" sublime-workspace
     do
         filename=${1}.${suffix}
-        find "${PROJECT_DIR}" -name "*.${suffix}" | while read path
+        find "${PROJECT_DIR}" -type f -name "*.${suffix}" | while read path
         do
-            if [[ $path =~ /"${filename}"$  ]]; then
+            if [ "$(basename ${path})" = "${filename}" ]; then
                 echo "delete ${path}"
                 rm "${path}"
                 break
@@ -34,25 +36,24 @@ delete_sublime_project()
 
 create_sublime_project()
 {
-    group=$1
-    dest_project=$3 && [ -z "$dest_project" ] && dest_project=$2
+    local group=$1
+    local dest_project=$3 && [ -z "$dest_project" ] && dest_project=$2
+    local dest_path="${PROJECT_DIR}${group}/${dest_project}.${PROJECT_SUFFIX}"
 
-    destPath="${PROJECT_DIR}${group}/${dest_project}.${PROJECT_SUFFIX}"
+    # replace path to project path.
+    local target="\"path\": \"`pwd`/${2}\","
+    local escape=`echo $target | sed "s/\//\\\\\\\\\//g"`
+    sed -i '' -e "s/\"path\":.*/${escape}/" "${dest_path}"
 
     # copy project config file
     mkdir -p "${PROJECT_DIR}${group}"
     if [ -f "${BASE_CONFIG_DIR}/${group}.${PROJECT_SUFFIX}" ]; then
-        cp "${BASE_CONFIG_DIR}/${group}.${PROJECT_SUFFIX}" "${destPath}"
+        cp "${BASE_CONFIG_DIR}/${group}.${PROJECT_SUFFIX}" "${dest_path}"
     else
-        cp "${BASE_CONFIG_DIR}/base.${PROJECT_SUFFIX}" "${destPath}"
+        cp "${BASE_CONFIG_DIR}/base.${PROJECT_SUFFIX}" "${dest_path}"
     fi
 
-    # replace path to project path.
-    target="\"path\": \"`pwd`/${2}\","
-    escape=`echo $target | sed "s/\//\\\\\\\\\//g"`
-    sed -i '' -e "s/\"path\":.*/${escape}/" "${destPath}"
-
-    open -a "${SUBLIME_CMD}" "${destPath}"
+    open -a "${SUBLIME_CMD}" "${dest_path}"
 }
 
 show_usage()
