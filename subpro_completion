@@ -8,10 +8,7 @@ PROJECT_SUFFIX=sublime-project
 
 all_sublime_project_files()
 {
-    find "${PROJECT_DIR}" -name "*.${PROJECT_SUFFIX}" | while read path
-    do
-        basename "$path" | sed -e "s/.${PROJECT_SUFFIX}//"
-    done
+    find "${PROJECT_DIR}" -type f -name "*.${PROJECT_SUFFIX}" -exec basename "{}" ".${PROJECT_SUFFIX}" \;
 }
 
 
