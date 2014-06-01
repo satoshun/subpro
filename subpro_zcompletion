@@ -1,0 +1,22 @@
+PROJECT_DIR=~/.subpro/
+PROJECT_SUFFIX=sublime-project
+COMMANDS=(create delete)
+
+all_sublime_project_files()
+{
+    find "${PROJECT_DIR}" -type f -name "*.${PROJECT_SUFFIX}" | xargs -I{} basename "{}" ".${PROJECT_SUFFIX}"
+}
+
+_subpro()
+{
+    if (( CURRENT <= 3 )); then
+        compadd $(all_sublime_project_files)
+        compadd $COMMANDS
+    else
+        compadd $(ls -d */ | sed -e 's/\///g')
+    fi
+
+    return 1
+}
+
+compdef _subpro subpro
