@@ -4,19 +4,32 @@ it's management project of Sublime Text with terminal.
 
 ### install
 
-use homebrew for macOS
+use homebrew for macOS.
 
 ```shell
 $ brew tap satoshun/commands
 $ brew install subpro
-$ brew install subpro-completion
 ```
 
-add under code to .bashrc
+add completion for bash.
 
 ```shell
+$ brew install subpro-completion
+
+# add under code to .bashrc
 if [ -f `brew --prefix`/etc/bash_completion.d/subpro_completion ]; then
     source `brew --prefix`/etc/bash_completion.d/subpro_completion
+fi
+```
+
+add completion for zsh.
+
+```shell
+$ brew install subpro-zcompletion
+
+# add under code to .zshrc
+if [ -f `brew --prefix`/etc/zsh_completion.d/subpro_zcompletion ]; then
+    source `brew --prefix`/etc/zsh_completion.d/subpro_zcompletion
 fi
 ```
 
