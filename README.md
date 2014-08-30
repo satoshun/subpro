@@ -36,11 +36,25 @@ fi
 ### usage
 
 ```shell
-$ subpro
-Example usage:
-  subpro [project]
-  subpro create|c [package] [project dir]
-  subpro delete|del|d [project]
+$ subpro -h
+NAME:
+   subpro - management sublime text project
+
+USAGE:
+   subpro [global options] command [command options] [arguments...]
+
+VERSION:
+   2.0.0
+
+COMMANDS:
+   create, c  create project
+   delete, d  delete project
+   help, h  Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --base, -b ''  define base path
+   --version, -v  print the version
+   --help, -h   show help
 ```
 
 ### Example
