@@ -76,7 +76,7 @@ func BaseConfigPath(c *cli.Context) string {
 func main() {
 	app := cli.NewApp()
 	app.Name = "subpro"
-	app.Version = "2.0.0"
+	app.Version = "2.0.1"
 	app.Usage = "management sublime text project"
 
 	app.Flags = []cli.Flag{
