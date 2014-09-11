@@ -94,8 +94,7 @@ func main() {
 			Action: func(c *cli.Context) {
 				v := Var{c}
 				if !v.IsValidCreate() {
-					log.Println("please input group and project path")
-					return
+					log.Fatal("please input group and project path")
 				}
 				os.MkdirAll(v.GroupPath(), 0755)
 				cmd := CopyFile(v.SrcConfigPath(), v.ProjectSettingPath())
@@ -104,15 +103,13 @@ func main() {
 				// overwrite project path
 				file, err := ioutil.ReadFile(v.ProjectSettingPath())
 				if err != nil {
-					log.Println("error", err)
-					return
+					log.Fatal(err)
 				}
 				sublSetting := UnMarshal(file)
 				sublSetting.Folders[0].Path = v.ProjectDir()
 				err = ioutil.WriteFile(v.ProjectSettingPath(), Marshal(sublSetting), 0644)
 				if err != nil {
-					log.Println("error", err)
-					return
+					log.Fatal(err)
 				}
 
 				log.Println("Create", v.ProjectName())
@@ -127,8 +124,7 @@ func main() {
 			Action: func(c *cli.Context) {
 				projectName := c.Args().Get(0)
 				if projectName == "" {
-					log.Println("please input want to delete a project name")
-					return
+					log.Fatal("please input want to delete a project name")
 				}
 
 				filepath.Walk(BasePath(c), func(p string, info os.FileInfo, err error) error {
