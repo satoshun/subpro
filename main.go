@@ -96,6 +96,9 @@ func main() {
 				if !v.IsValidCreate() {
 					log.Fatal("please input group and project path")
 				}
+				if _, err := os.Stat(v.ProjectSettingPath()); err == nil {
+					log.Fatal("Already file exists")
+				}
 				os.MkdirAll(v.GroupPath(), 0755)
 				cmd := CopyFile(v.SrcConfigPath(), v.ProjectSettingPath())
 				cmd.Run()
