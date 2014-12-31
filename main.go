@@ -99,7 +99,7 @@ func (v Var) isExistFile() bool {
 func main() {
 	app := cli.NewApp()
 	app.Name = "subpro"
-	app.Version = "2.0.1"
+	app.Version = "2.0.2"
 	app.Usage = "management sublime text project"
 
 	app.Flags = []cli.Flag{
