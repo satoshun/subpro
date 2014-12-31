@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	PROJECT_SUFFIX   = "sublime-project"
-	BASE_CONFIG_PATH = "base/base.sublime-project"
+	projectSuffix  = "sublime-project"
+	baseConfigPath = "base/base.sublime-project"
 )
 
 type Var struct {
@@ -33,21 +33,21 @@ func (v Var) ProjectName() string {
 	return v.c.Args().Get(1)
 }
 
-func (v Var) ProjectDir() string {
+func (v Var) projectDir() string {
 	d, _ := os.Getwd()
 	return path.Join(d, v.ProjectName())
 }
 
-func (v Var) ProjectSettingPath() string {
+func (v Var) projectSettingPath() string {
 	name := v.c.Args().Get(2)
 	if name == "" {
 		name = path.Base(v.ProjectName())
 	}
-	return path.Join(v.GroupPath(), name) + "." + PROJECT_SUFFIX
+	return path.Join(v.GroupPath(), name) + "." + projectSuffix
 }
 
-func (v Var) SrcConfigPath() string {
-	configPath := path.Join(BasePath(v.c), v.Group()+"."+PROJECT_SUFFIX)
+func (v Var) srcConfigPath() string {
+	configPath := path.Join(BasePath(v.c), v.Group()+"."+projectSuffix)
 	if _, err := os.Stat(configPath); err == nil {
 		return configPath
 	}
@@ -55,7 +55,7 @@ func (v Var) SrcConfigPath() string {
 	return BaseConfigPath(v.c)
 }
 
-func (v Var) IsValidCreate() bool {
+func (v Var) isValidCreate() bool {
 	return len(v.c.Args()) >= 2
 }
 
@@ -70,7 +70,30 @@ func BasePath(c *cli.Context) string {
 }
 
 func BaseConfigPath(c *cli.Context) string {
-	return path.Join(BasePath(c), BASE_CONFIG_PATH)
+	return path.Join(BasePath(c), baseConfigPath)
+}
+
+func (v Var) isExistFile() bool {
+	flag := false
+	name := v.ProjectName() + "." + projectSuffix
+
+	filepath.Walk(BasePath(v.c), func(p string, info os.FileInfo, err error) error {
+		if flag {
+			return filepath.SkipDir
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		if name == info.Name() {
+			flag = true
+		}
+
+		return nil
+	})
+
+	return flag
 }
 
 func main() {
@@ -93,30 +116,30 @@ func main() {
 			Usage:     "create project",
 			Action: func(c *cli.Context) {
 				v := Var{c}
-				if !v.IsValidCreate() {
+				if !v.isValidCreate() {
 					log.Fatal("please input group and project path")
 				}
-				if _, err := os.Stat(v.ProjectSettingPath()); err == nil {
+				if v.isExistFile() {
 					log.Fatal("Already file exists")
 				}
 				os.MkdirAll(v.GroupPath(), 0755)
-				cmd := CopyFile(v.SrcConfigPath(), v.ProjectSettingPath())
+				cmd := CopyFile(v.srcConfigPath(), v.projectSettingPath())
 				cmd.Run()
 
 				// overwrite project path
-				file, err := ioutil.ReadFile(v.ProjectSettingPath())
+				file, err := ioutil.ReadFile(v.projectSettingPath())
 				if err != nil {
 					log.Fatal(err)
 				}
 				sublSetting := UnMarshal(file)
-				sublSetting.Folders[0].Path = v.ProjectDir()
-				err = ioutil.WriteFile(v.ProjectSettingPath(), Marshal(sublSetting), 0644)
+				sublSetting.Folders[0].Path = v.projectDir()
+				err = ioutil.WriteFile(v.projectSettingPath(), Marshal(sublSetting), 0644)
 				if err != nil {
 					log.Fatal(err)
 				}
 
 				log.Println("Create", v.ProjectName())
-				cmd = OpenSublText(v.ProjectSettingPath())
+				cmd = OpenSublText(v.projectSettingPath())
 				cmd.Run()
 			},
 		},
@@ -156,7 +179,7 @@ func main() {
 				return nil
 			}
 
-			if !strings.HasSuffix(p, PROJECT_SUFFIX) {
+			if !strings.HasSuffix(p, projectSuffix) {
 				return nil
 			}
 
