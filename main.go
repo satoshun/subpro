@@ -13,53 +13,53 @@ import (
 )
 
 const (
-	projectSuffix  = "sublime-project"
-	baseConfigPath = "base/base.sublime-project"
+	projectSuffix         = "sublime-project"
+	baseSublimeConfigPath = "base/base.sublime-project"
 )
 
-type Var struct {
+type config struct {
 	c *cli.Context
 }
 
-func (v Var) Group() string {
+func (v config) group() string {
 	return v.c.Args().Get(0)
 }
 
-func (v Var) GroupPath() string {
-	return path.Join(BasePath(v.c), v.c.Args().Get(0))
+func (v config) groupPath() string {
+	return path.Join(basePath(v.c), v.c.Args().Get(0))
 }
 
-func (v Var) ProjectName() string {
+func (v config) projectName() string {
 	return v.c.Args().Get(1)
 }
 
-func (v Var) projectDir() string {
+func (v config) projectDir() string {
 	d, _ := os.Getwd()
-	return path.Join(d, v.ProjectName())
+	return path.Join(d, v.projectName())
 }
 
-func (v Var) projectSettingPath() string {
+func (v config) projectSettingPath() string {
 	name := v.c.Args().Get(2)
 	if name == "" {
-		name = path.Base(v.ProjectName())
+		name = path.Base(v.projectName())
 	}
-	return path.Join(v.GroupPath(), name) + "." + projectSuffix
+	return path.Join(v.groupPath(), name) + "." + projectSuffix
 }
 
-func (v Var) srcConfigPath() string {
-	configPath := path.Join(BasePath(v.c), v.Group()+"."+projectSuffix)
+func (v config) srcConfigPath() string {
+	configPath := path.Join(basePath(v.c), v.group()+"."+projectSuffix)
 	if _, err := os.Stat(configPath); err == nil {
 		return configPath
 	}
 
-	return BaseConfigPath(v.c)
+	return baseConfigPath(v.c)
 }
 
-func (v Var) isValidCreate() bool {
+func (v config) isValidCreate() bool {
 	return len(v.c.Args()) >= 2
 }
 
-func BasePath(c *cli.Context) string {
+func basePath(c *cli.Context) string {
 	for _, ca := range [...]string{c.String("base")} {
 		if ca != "" {
 			return ca
@@ -69,15 +69,15 @@ func BasePath(c *cli.Context) string {
 	return path.Join(usr.HomeDir, ".subpro") + "/"
 }
 
-func BaseConfigPath(c *cli.Context) string {
-	return path.Join(BasePath(c), baseConfigPath)
+func baseConfigPath(c *cli.Context) string {
+	return path.Join(basePath(c), baseSublimeConfigPath)
 }
 
-func (v Var) isExistFile() bool {
+func (v config) isExistFile() bool {
 	flag := false
-	name := v.ProjectName() + "." + projectSuffix
+	name := v.projectName() + "." + projectSuffix
 
-	filepath.Walk(BasePath(v.c), func(p string, info os.FileInfo, err error) error {
+	filepath.Walk(basePath(v.c), func(p string, info os.FileInfo, err error) error {
 		if flag {
 			return filepath.SkipDir
 		}
@@ -115,15 +115,15 @@ func main() {
 			ShortName: "c",
 			Usage:     "create project",
 			Action: func(c *cli.Context) {
-				v := Var{c}
+				v := config{c}
 				if !v.isValidCreate() {
 					log.Fatal("please input group and project path")
 				}
 				if v.isExistFile() {
 					log.Fatal("Already file exists")
 				}
-				os.MkdirAll(v.GroupPath(), 0755)
-				cmd := CopyFile(v.srcConfigPath(), v.projectSettingPath())
+				os.MkdirAll(v.groupPath(), 0755)
+				cmd := copyFile(v.srcConfigPath(), v.projectSettingPath())
 				cmd.Run()
 
 				// overwrite project path
@@ -138,8 +138,8 @@ func main() {
 					log.Fatal(err)
 				}
 
-				log.Println("Create", v.ProjectName())
-				cmd = OpenSublText(v.projectSettingPath())
+				log.Println("Create", v.projectName())
+				cmd = openSublText(v.projectSettingPath())
 				cmd.Run()
 			},
 		},
@@ -153,7 +153,7 @@ func main() {
 					log.Fatal("please input want to delete a project name")
 				}
 
-				filepath.Walk(BasePath(c), func(p string, info os.FileInfo, err error) error {
+				filepath.Walk(basePath(c), func(p string, info os.FileInfo, err error) error {
 					if info.IsDir() {
 						return nil
 					}
@@ -161,7 +161,7 @@ func main() {
 					name := strings.Split(path.Base(p), ".")[0]
 					if name == projectName {
 						log.Println("Delete", p)
-						cmd := DeleteFile(p)
+						cmd := deleteFile(p)
 						cmd.Run()
 					}
 
@@ -174,7 +174,7 @@ func main() {
 	app.Action = func(c *cli.Context) {
 		projectName := c.Args().Get(0)
 
-		filepath.Walk(BasePath(c), func(p string, info os.FileInfo, err error) error {
+		filepath.Walk(basePath(c), func(p string, info os.FileInfo, err error) error {
 			if info.IsDir() {
 				return nil
 			}
@@ -186,7 +186,7 @@ func main() {
 			name := strings.Split(path.Base(p), ".")[0]
 			if name == projectName {
 				log.Println("Open", name)
-				cmd := OpenSublText(p)
+				cmd := openSublText(p)
 				cmd.Run()
 			}
 

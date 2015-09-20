@@ -5,7 +5,7 @@ import (
 	"os/exec"
 )
 
-func OpenSublText(projectPath string) (cmd *exec.Cmd) {
+func openSublText(projectPath string) (cmd *exec.Cmd) {
 	args := []string{"-a", "Sublime Text", projectPath}
 	cmd = exec.Command("open", args...)
 	cmd.Stdout = os.Stdout
@@ -14,7 +14,7 @@ func OpenSublText(projectPath string) (cmd *exec.Cmd) {
 	return
 }
 
-func DeleteFile(projectPath string) (cmd *exec.Cmd) {
+func deleteFile(projectPath string) (cmd *exec.Cmd) {
 	args := []string{projectPath}
 	cmd = exec.Command("rm", args...)
 	cmd.Stdout = os.Stdout
@@ -23,7 +23,7 @@ func DeleteFile(projectPath string) (cmd *exec.Cmd) {
 	return
 }
 
-func CopyFile(src, dest string) (cmd *exec.Cmd) {
+func copyFile(src, dest string) (cmd *exec.Cmd) {
 	args := []string{src, dest}
 	cmd = exec.Command("cp", args...)
 	cmd.Stdout = os.Stdout
