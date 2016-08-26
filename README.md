@@ -7,8 +7,12 @@ it's management project of Sublime Text with terminal.
 use homebrew for macOS.
 
 ```shell
-$ brew tap satoshun/commands
-$ brew install subpro
+brew tap satoshun/commands
+brew install subpro
+
+or
+
+go get github.com/satoshun/subpro/cmd
 ```
 
 add completion for bash.
@@ -36,7 +40,7 @@ fi
 ### usage
 
 ```shell
-$ subpro -h
+subpro -h
 NAME:
    subpro - management sublime text project
 
@@ -62,21 +66,22 @@ GLOBAL OPTIONS:
 project list && open project
 
 ```shell
-$ subpro [tab]
+subpro [tab]
 Display all 131 possibilities? (y or n)
 Amalgam                                 beaker                                  ghost                                   roboguice
 Android-Universal-Image-Loader          bitcoin                                 gist_css                                routes
 ...
-$ subpro ghost
+subpro ghost
 # open ghost project with sublime text]
 ```
 
 create project
 
 ```shell
-$ ls
+ls
 martini
-$ subpro create golang martini
+
+subpro create golang martini
 
 # create martini project into golang directory.
 
@@ -88,7 +93,7 @@ $ subpro martini
 delete project
 
 ```shell
-$ subpro delete martini
+subpro delete martini
 ```
 
 ### License

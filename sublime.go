@@ -1,4 +1,4 @@
-package main
+package subpro
 
 import (
 	"encoding/json"
@@ -16,13 +16,20 @@ type Folder struct {
 	FolderExcludePatterns interface{} `json:"folder_exclude_patterns"`
 }
 
-func Marshal(setting SublSetting) []byte {
-	b, _ := json.MarshalIndent(setting, "", "  ")
+func MarshalSetting(setting SublSetting) []byte {
+	b, err := json.MarshalIndent(setting, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+
 	return b
 }
 
-func UnMarshal(b []byte) SublSetting {
+func UnMarshalSetting(b []byte) SublSetting {
 	var sublSetting SublSetting
-	json.Unmarshal(b, &sublSetting)
+	err := json.Unmarshal(b, &sublSetting)
+	if err != nil {
+		panic(err)
+	}
 	return sublSetting
 }
