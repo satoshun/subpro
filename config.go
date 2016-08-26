@@ -1,7 +1,10 @@
 package subpro
 
 import (
+	"io"
+	"io/ioutil"
 	"os"
+	"os/exec"
 	"os/user"
 	"path"
 	"path/filepath"
@@ -61,24 +64,6 @@ func (v *Config) CreateDir(perm os.FileMode) error {
 	return os.MkdirAll(v.GroupPath(), perm)
 }
 
-func BasePath(c *cli.Context) string {
-	for _, ca := range [...]string{c.String("base")} {
-		if ca != "" {
-			return ca
-		}
-	}
-	usr, _ := user.Current()
-	return path.Join(usr.HomeDir, ".subpro") + "/"
-}
-
-func IsSublimeFile(path string) bool {
-	return strings.HasSuffix(path, projectSuffix)
-}
-
-func BaseConfigPath(c *cli.Context) string {
-	return path.Join(BasePath(c), baseSublimeConfigPath)
-}
-
 func (v *Config) IsExist() bool {
 	flag := false
 	name := v.ProjectName() + "." + projectSuffix
@@ -100,4 +85,53 @@ func (v *Config) IsExist() bool {
 	})
 
 	return flag
+}
+
+func BasePath(c *cli.Context) string {
+	for _, ca := range [...]string{c.String("base")} {
+		if ca != "" {
+			return ca
+		}
+	}
+	usr, _ := user.Current()
+	return path.Join(usr.HomeDir, ".subpro") + "/"
+}
+
+func IsSublimeFile(path string) bool {
+	return strings.HasSuffix(path, projectSuffix)
+}
+
+func BaseConfigPath(c *cli.Context) string {
+	return path.Join(BasePath(c), baseSublimeConfigPath)
+}
+
+func OpenCommand(projectPath string) (cmd *exec.Cmd) {
+	args := []string{"-a", "Sublime Text", projectPath}
+	cmd = exec.Command("open", args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return
+}
+
+func CopyFile(dst, src string) error {
+	in, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer in.Close()
+	tmp, err := ioutil.TempFile(filepath.Dir(dst), "")
+	if err != nil {
+		return err
+	}
+	_, err = io.Copy(tmp, in)
+	if err != nil {
+		tmp.Close()
+		os.Remove(tmp.Name())
+		return err
+	}
+	if err = tmp.Close(); err != nil {
+		os.Remove(tmp.Name())
+		return err
+	}
+	return os.Rename(tmp.Name(), dst)
 }
