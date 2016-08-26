@@ -1,8 +1,11 @@
 package subpro
 
 import (
+	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 )
 
 func OpenCommand(projectPath string) (cmd *exec.Cmd) {
@@ -13,18 +16,25 @@ func OpenCommand(projectPath string) (cmd *exec.Cmd) {
 	return
 }
 
-func DeleteCommand(projectPath string) (cmd *exec.Cmd) {
-	args := []string{projectPath}
-	cmd = exec.Command("rm", args...)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return
-}
-
-func CopyCommand(src, dest string) (cmd *exec.Cmd) {
-	args := []string{src, dest}
-	cmd = exec.Command("cp", args...)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return
+func CopyFile(dst, src string) error {
+	in, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer in.Close()
+	tmp, err := ioutil.TempFile(filepath.Dir(dst), "")
+	if err != nil {
+		return err
+	}
+	_, err = io.Copy(tmp, in)
+	if err != nil {
+		tmp.Close()
+		os.Remove(tmp.Name())
+		return err
+	}
+	if err = tmp.Close(); err != nil {
+		os.Remove(tmp.Name())
+		return err
+	}
+	return os.Rename(tmp.Name(), dst)
 }

@@ -42,8 +42,7 @@ func main() {
 					log.Fatal("Already file exists")
 				}
 				checkErr(v.CreateDir(0755))
-				cmd := subpro.CopyCommand(v.SrcConfigPath(), v.ProjectSettingPath())
-				checkErr(cmd.Run())
+				checkErr(subpro.CopyFile(v.ProjectSettingPath(), v.SrcConfigPath()))
 
 				// overwrite project file
 				file, err := ioutil.ReadFile(v.ProjectSettingPath())
@@ -54,7 +53,7 @@ func main() {
 				checkErr(ioutil.WriteFile(v.ProjectSettingPath(), subpro.MarshalSetting(sublSetting), 0644))
 
 				log.Println("Create", v.ProjectName())
-				cmd = subpro.OpenCommand(v.ProjectSettingPath())
+				cmd := subpro.OpenCommand(v.ProjectSettingPath())
 				checkErr(cmd.Run())
 
 				return nil
@@ -78,8 +77,7 @@ func main() {
 					name := strings.Split(path.Base(p), ".")[0]
 					if name == projectName {
 						log.Println("Delete", p)
-						cmd := subpro.DeleteCommand(p)
-						checkErr(cmd.Run())
+						checkErr(os.Remove(p))
 					}
 
 					return nil
