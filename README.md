@@ -12,7 +12,7 @@ brew install subpro
 
 or
 
-go get -u -v github.com/satoshun/subpro/cmd
+go get -u -v github.com/satoshun/subpro/cmd/subpro
 ```
 
 add completion for bash.
